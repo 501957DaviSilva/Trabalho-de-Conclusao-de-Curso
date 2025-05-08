@@ -9,6 +9,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      - GOOGLE_API_KEY=AIzaSyC-oMjWjUnG2YYYO5FMe7h4emfcgRa1oes
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - SPRING_DATASOURCE_URL=jdbc:mysql://database-1.c61gygmoktsm.us-east-1.rds.amazonaws.com:3306/novotestecrud?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC

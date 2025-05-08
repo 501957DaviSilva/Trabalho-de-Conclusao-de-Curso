@@ -2,6 +2,10 @@ package com.example.NovoTesteCrud.controller;
 
 import com.example.NovoTesteCrud.domain.acad.dto.AcademiaRequestDTO;
 import com.example.NovoTesteCrud.domain.acad.dto.AcademiaResponseDTO;
+import com.example.NovoTesteCrud.domain.acad.dto.AcademiaFilterDto;
+import com.example.NovoTesteCrud.domain.acad.dto.enums.TipoAcad;
+import com.example.NovoTesteCrud.domain.acad.dto.enums.Estrutura;
+import com.example.NovoTesteCrud.domain.acad.dto.enums.Servicos;
 import com.example.NovoTesteCrud.service.AcademiaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,18 @@ public class AcademiaController {
                 .map(AcademiaResponseDTO::new)
                 .toList();
         return ResponseEntity.ok(academias);
+    }
+    @GetMapping("/filtro")
+    public ResponseEntity<List<AcademiaResponseDTO>> buscarComFiltro(
+            @RequestParam(required = false) List<TipoAcad> tipos,
+            @RequestParam(required = false) List<Estrutura> estruturas,
+            @RequestParam(required = false) List<Servicos> servicos
+    ) {
+        var filtro = new AcademiaFilterDto(tipos, estruturas, servicos);
+        var lista = academiaService.buscarTodasAcademiasFiltradas(filtro)
+                .stream().map(AcademiaResponseDTO::new).toList();
+
+        return ResponseEntity.ok(lista);
     }
 
     @PreAuthorize("hasAnyRole('USERADMIN', 'USERACADADMIN')")
