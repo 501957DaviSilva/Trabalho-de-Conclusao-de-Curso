@@ -75,6 +75,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/auth/reset-password").permitAll()
                         .requestMatchers(HttpMethod.GET, "/academia").permitAll()
                         .requestMatchers(HttpMethod.GET, "/academias").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/servicos-externos", "/servicos-externos/academia/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/atividades").permitAll()
                         .requestMatchers(HttpMethod.GET, "/avaliacoes/academia/{academiaId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/avaliacoes/personal/{personalId}").permitAll()
