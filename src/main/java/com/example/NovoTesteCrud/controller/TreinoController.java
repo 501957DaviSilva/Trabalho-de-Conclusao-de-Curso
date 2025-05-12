@@ -2,11 +2,6 @@ package com.example.NovoTesteCrud.controller;
 
 import com.example.NovoTesteCrud.domain.treino.dto.TreinoResponseDTO;
 import com.example.NovoTesteCrud.domain.treino.dto.TreinoRequestDTO;
-import com.example.NovoTesteCrud.domain.treino.dto.TreinoFilterDto;
-import com.example.NovoTesteCrud.domain.treino.dto.enums.Tipos;
-import com.example.NovoTesteCrud.domain.treino.dto.enums.Hipertrofia_Performace;
-import com.example.NovoTesteCrud.domain.treino.dto.enums.Cardio;
-
 import com.example.NovoTesteCrud.service.TreinoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@PreAuthorize("permitAll()")
 @RestController
 @RequestMapping("/treino")
 public class TreinoController {
@@ -30,16 +24,6 @@ public class TreinoController {
     public ResponseEntity<List<TreinoResponseDTO>> buscarTodosTreinos() {
         return ResponseEntity.ok(treinoService.buscarTodosTreinos());
     }
-    @GetMapping("/filtro")
-    public List<TreinoResponseDTO> buscarFiltrados(
-            @RequestParam(required = false) List<Cardio> cardios,
-            @RequestParam(required = false) List<Hipertrofia_Performace> hipertrofias,
-            @RequestParam(required = false) List<Tipos> tiposTreino
-    ) {
-        TreinoFilterDto filtro = new TreinoFilterDto(cardios, hipertrofias, tiposTreino);
-        return treinoService.buscarTreinosFiltrados(filtro);
-    }
-
 
     @PreAuthorize("hasAnyRole('USERADMIN','USERACAD', 'PERSONAL')")
     @PostMapping

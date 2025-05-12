@@ -1,1 +1,2 @@
 ALTER TABLE academias ADD COLUMN telefone VARCHAR(20) NOT NULL;
+ALTER TABLE  academias ADD COLUMN tipo_acad VARCHAR(20) NOT NULL;

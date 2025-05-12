@@ -1,44 +1,27 @@
 package com.example.NovoTesteCrud.domain.acad.dto;
 
 import com.example.NovoTesteCrud.domain.acad.Academia;
-import com.example.NovoTesteCrud.domain.acad.enums.Estrutura;
-import com.example.NovoTesteCrud.domain.acad.enums.Servicos;
 import com.example.NovoTesteCrud.domain.acad.enums.TipoAcad;
 import com.example.NovoTesteCrud.infra.FilterSpecification;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
+import java.util.Objects;
 
-public class AcademiaFilterDTO implements FilterSpecification<Academia> {
+public class AcademiaFilterDto implements FilterSpecification<Academia> {
+    private final TipoAcad tipoAcad;
 
-    private final List<TipoAcad> tipos;
-    private final List<Estrutura> estruturas;
-    private final List<Servicos> servicos;
-
-    public AcademiaFilterDTO(List<TipoAcad> tipos, List<Estrutura> estruturas, List<Servicos> servicos) {
-        this.tipos = tipos;
-        this.estruturas = estruturas;
-        this.servicos = servicos;
+    public AcademiaFilterDto(TipoAcad tipoAcad) {
+        this.tipoAcad = tipoAcad;
     }
 
     @Override
     public Specification<Academia> toSpecification() {
         Specification<Academia> spec = Specification.where(null);
 
-        if (tipos != null && !tipos.isEmpty()) {
-            spec = spec.and((root, query, cb) -> root.get("tipoAcad").in(tipos));
-        }
-
-        if (estruturas != null && !estruturas.isEmpty()) {
-            for (Estrutura estrutura : estruturas) {
-                spec = spec.and((root, query, cb) -> cb.isMember(estrutura, root.get("estruturas")));
-            }
-        }
-
-        if (servicos != null && !servicos.isEmpty()) {
-            for (Servicos servico : servicos) {
-                spec = spec.and((root, query, cb) -> cb.isMember(servico, root.get("servicos")));
-            }
+        if (Objects.nonNull(tipoAcad)) {
+            spec = spec.and(
+                    (root, query, cb) -> cb.equal(root.get("tipoAcad"), tipoAcad)
+            );
         }
 
         return spec;

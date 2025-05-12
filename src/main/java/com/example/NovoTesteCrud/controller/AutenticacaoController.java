@@ -3,34 +3,26 @@ package com.example.NovoTesteCrud.controller;
 import com.example.NovoTesteCrud.domain.autenticacao.dto.AutenticacaoRegister;
 import com.example.NovoTesteCrud.domain.autenticacao.dto.AutenticacaoRequestDTO;
 import com.example.NovoTesteCrud.domain.autenticacao.dto.AutenticacaoResponseDTO;
-import com.example.NovoTesteCrud.domain.email.ResetarSenhaToken;
-import com.example.NovoTesteCrud.domain.email.dto.EsquecerSenhaRequest;
-import com.example.NovoTesteCrud.domain.email.dto.ResetarSenhaRequest;
 import com.example.NovoTesteCrud.domain.personal.Personal;
 import com.example.NovoTesteCrud.domain.user.UserAcad;
 import com.example.NovoTesteCrud.domain.useracadadmin.UserAcadAdmin;
 import com.example.NovoTesteCrud.domain.useradmin.UserAdmin;
-import com.example.NovoTesteCrud.repository.*;
+import com.example.NovoTesteCrud.repository.PersonalRepository;
+import com.example.NovoTesteCrud.repository.UserAcadAdminRepository;
+import com.example.NovoTesteCrud.repository.UserAcadRepository;
+import com.example.NovoTesteCrud.repository.UserAdminRepository;
 import com.example.NovoTesteCrud.security.JwtUtil;
-import com.example.NovoTesteCrud.service.EmailService;
-import com.example.NovoTesteCrud.service.ResetarSenhaRedisService;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/auth")
@@ -43,11 +35,6 @@ public class AutenticacaoController {
     @Autowired private UserAdminRepository userAdminRepository;
     @Autowired private UserAcadAdminRepository userAcadAdminRepository;
     @Autowired private PersonalRepository personalRepository;
-    @Autowired private EmailService emailService;
-    @Autowired private ResetarSenhaRedisService resetarSenhaRedisService;
-
-
-
 
     @PostMapping("/login")
     public ResponseEntity<AutenticacaoResponseDTO> login(@RequestBody @Valid AutenticacaoRequestDTO dto) {
@@ -168,87 +155,5 @@ public class AutenticacaoController {
                 userAdminRepository.findByUsuario_Email(email).isPresent() ||
                 userAcadAdminRepository.findByUsuario_Email(email).isPresent() ||
                 personalRepository.findByUsuario_Email(email).isPresent();
-    }
-
-    @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestBody EsquecerSenhaRequest request) throws MessagingException {
-        boolean userFound = false;
-
-        if (userAcadRepository.findByUsuario_Email(request.getEmail()).isPresent() ||
-                userAdminRepository.findByUsuario_Email(request.getEmail()).isPresent() ||
-                userAcadAdminRepository.findByUsuario_Email(request.getEmail()).isPresent() ||
-                personalRepository.findByUsuario_Email(request.getEmail()).isPresent()) {
-            userFound = true;
-        }
-
-        if (!userFound) {
-            return "Usuário não encontrado com este e-mail.";
-        }
-
-        String token = java.util.UUID.randomUUID().toString();
-        resetarSenhaRedisService.salvarToken(token, request.getEmail(), 60);
-
-        String resetLink = "http://localhost:8080/reset-password?token=" + token;
-
-        emailService.sendEmail(
-                request.getEmail(),
-                "Recuperação de Senha",
-                "<p>Para redefinir sua senha, clique no link abaixo:</p>" +
-                        "<a href=\"" + resetLink + "\">Redefinir Senha</a>"
-        );
-
-        return "E-mail de recuperação enviado!";
-    }
-
-    @PostMapping("/reset-password")
-    public String resetPassword(@RequestBody ResetarSenhaRequest request) {
-        String email = resetarSenhaRedisService.buscarEmailPorToken(request.getToken());
-
-        if (email == null) {
-            return "Token inválido ou expirado.";
-        }
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        boolean userUpdated = false;
-
-        var userAcadOpt = userAcadRepository.findByUsuario_Email(email);
-        if (userAcadOpt.isPresent()) {
-            var user = userAcadOpt.get();
-            user.setSenha(encoder.encode(request.getNovaSenha()));
-            userAcadRepository.save(user);
-            userUpdated = true;
-        } else {
-            var userAdminOpt = userAdminRepository.findByUsuario_Email(email);
-            if (userAdminOpt.isPresent()) {
-                var user = userAdminOpt.get();
-                user.setSenha(encoder.encode(request.getNovaSenha()));
-                userAdminRepository.save(user);
-                userUpdated = true;
-            } else {
-                var userAcadAdminOpt = userAcadAdminRepository.findByUsuario_Email(email);
-                if (userAcadAdminOpt.isPresent()) {
-                    var user = userAcadAdminOpt.get();
-                    user.setSenha(encoder.encode(request.getNovaSenha()));
-                    userAcadAdminRepository.save(user);
-                    userUpdated = true;
-                } else {
-                    var personalOpt = personalRepository.findByUsuario_Email(email);
-                    if (personalOpt.isPresent()) {
-                        var user = personalOpt.get();
-                        user.setSenha(encoder.encode(request.getNovaSenha()));
-                        personalRepository.save(user);
-                        userUpdated = true;
-                    }
-                }
-            }
-        }
-
-        if (!userUpdated) {
-            return "Usuário não encontrado para redefinir senha.";
-        }
-
-        resetarSenhaRedisService.deletarToken(request.getToken());
-
-        return "Senha redefinida com sucesso!";
     }
 }

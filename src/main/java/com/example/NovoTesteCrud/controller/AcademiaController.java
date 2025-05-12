@@ -1,11 +1,10 @@
 package com.example.NovoTesteCrud.controller;
 
+import com.example.NovoTesteCrud.domain.acad.Academia;
+import com.example.NovoTesteCrud.domain.acad.dto.AcademiaFilterDto;
 import com.example.NovoTesteCrud.domain.acad.dto.AcademiaRequestDTO;
 import com.example.NovoTesteCrud.domain.acad.dto.AcademiaResponseDTO;
-import com.example.NovoTesteCrud.domain.acad.dto.AcademiaFilterDTO;
 import com.example.NovoTesteCrud.domain.acad.enums.TipoAcad;
-import com.example.NovoTesteCrud.domain.acad.enums.Estrutura;
-import com.example.NovoTesteCrud.domain.acad.enums.Servicos;
 import com.example.NovoTesteCrud.service.AcademiaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,23 +25,13 @@ public class AcademiaController {
 
 //    @PreAuthorize("hasAnyRole('USERADMIN', 'USERACADADMIN', 'USERACAD', 'PERSONAL')")
     @GetMapping
-    public ResponseEntity<List<AcademiaResponseDTO>> buscarTodasAcademias() {
-        List<AcademiaResponseDTO> academias = academiaService.buscarTodasAcademias().stream()
-                .map(AcademiaResponseDTO::new)
-                .toList();
-        return ResponseEntity.ok(academias);
-    }
-    @GetMapping("/filtro")
-    public ResponseEntity<List<AcademiaResponseDTO>> buscarComFiltro(
-            @RequestParam(required = false) List<TipoAcad> tipos,
-            @RequestParam(required = false) List<Estrutura> estruturas,
-            @RequestParam(required = false) List<Servicos> servicos
+    public ResponseEntity<List<Academia>> buscarTodasAcademias(
+            @RequestParam(required = false) TipoAcad tipo
     ) {
-        var filtro = new AcademiaFilterDTO(tipos, estruturas, servicos);
-        var lista = academiaService.buscarTodasAcademiasFiltradas(filtro)
-                .stream().map(AcademiaResponseDTO::new).toList();
+        AcademiaFilterDto filter = new AcademiaFilterDto(tipo);
 
-        return ResponseEntity.ok(lista);
+        List<Academia> academias = academiaService.buscarTodasAcademiasFiltradas(filter);
+        return ResponseEntity.ok(academias);
     }
 
     @PreAuthorize("hasAnyRole('USERADMIN', 'USERACADADMIN')")
@@ -67,7 +56,6 @@ public class AcademiaController {
     }
 
     @PreAuthorize("@academiaService.usuarioPodeGerenciar(#id) or hasAnyRole('USERADMIN', 'USERACADADMIN')")
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> deletarAcademia(@PathVariable Long id) {
         academiaService.deletarAcademia(id);
