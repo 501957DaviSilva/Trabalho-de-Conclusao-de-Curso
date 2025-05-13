@@ -80,6 +80,11 @@
         formData.forEach((vl, key) => json[key] = vl);
 
         const token = localStorage.getItem('token');
+        if (!token) {
+            pError.textContent = 'Erro Ao cadastrar'
+            return;
+        }
+
         const res = await fetch('/treino', {
             method: 'POST',
             headers: {
@@ -90,6 +95,7 @@
         })
 
         const data = await res.json();
+        console.log(data);
 
         if (res.status !== 200) {
             pError.textContent = 'Erro Ao cadastrar'

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Title+Hero&display=swap"
+            rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/rodape.css">
+    <link rel="stylesheet" href="/css/reset-senha.css">
+
+    <title>GuidesFit</title>
+</head>
+    <body>
+        <div th:replace="/componentes/menu" ></div>
+
+            <main>
+                <section>
+                    <h3>Redefinir Senha</h3>
+
+                    <div>
+                        <label for="email">Email</label>
+                        <input type="email" placeholder="email@example.com" id="email" name="email">
+
+                            <button class="btn-send-code">Enviar Codigo</button>
+                    </div>
+
+                    <div>
+                        <input type="text" placeholder="Insira o Código" id="codigo" name="codigo">
+
+                        <button class="btn-reset-password">Redefinir Senha</button>
+                    </div>
+                </section>
+
+            </main>
+
+        <div th:replace="componentes/rodape"></div>
+    </body>
+</html>

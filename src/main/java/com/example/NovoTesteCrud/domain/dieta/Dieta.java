@@ -2,7 +2,6 @@ package com.example.NovoTesteCrud.domain.dieta;
 
 import com.example.NovoTesteCrud.domain.personal.Personal;
 import com.example.NovoTesteCrud.domain.user.UserAcad;
-import com.example.NovoTesteCrud.domain.dieta.dto.enums.TipoDieta;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,11 +29,6 @@ public class Dieta {
     @ManyToOne
     @JoinColumn(name = "user_acad_id")
     private UserAcad userAcad;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_dieta")
-    private TipoDieta tipoDieta;
-
 
     @ManyToOne
     @JoinColumn(name = "personal_id")

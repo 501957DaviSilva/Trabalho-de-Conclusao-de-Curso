@@ -1,7 +1,7 @@
 package com.example.NovoTesteCrud.service;
 
 import com.example.NovoTesteCrud.domain.acad.Academia;
-import com.example.NovoTesteCrud.domain.acad.dto.AcademiaFilterDTO;
+import com.example.NovoTesteCrud.domain.acad.dto.AcademiaFilterDto;
 import com.example.NovoTesteCrud.repository.AcademiaRepository;
 import com.example.NovoTesteCrud.domain.acad.dto.AcademiaRequestDTO;
 import com.example.NovoTesteCrud.repository.UserAcadAdminRepository;
@@ -27,7 +27,11 @@ public class AcademiaService {
         return repository.findAll();
     }
 
-    public List<Academia> buscarTodasAcademiasFiltradas(AcademiaFilterDTO filter) {
+    public Optional<Academia> buscarAcademiaPorId(Long id) {
+        return this.repository.findById(id);
+    }
+
+    public List<Academia> buscarTodasAcademiasFiltradas(AcademiaFilterDto filter) {
         Specification<Academia> spec = filter.toSpecification();
 
         return repository.findAll(spec);
@@ -39,6 +43,7 @@ public class AcademiaService {
         newAcademia.setNome(data.nome());
         newAcademia.setEndereco(data.endereco());
         newAcademia.setTelefone(data.telefone());
+        newAcademia.setCnpj(data.cnpj());
 
         return repository.save(newAcademia);
     }

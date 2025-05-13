@@ -1,7 +1,56 @@
-a, p, h3 {
-    font-family: 'Inter', sans-serif;
-  }
-  
-  h2 {
-    font-family: 'Title Hero', sans-serif;
-  }
+main {
+    width: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+main .user-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    column-gap: 10px;
+    row-gap: 25px;
+}
+
+main .academia-info {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    gap: 30px;
+}
+
+main .academia-info .titles {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+main .gym-cards {
+    width: 60%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    column-gap: 10px;
+    row-gap: 25px;
+}
+
+main .gym-cards .gym-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+main .gym-cards .gym-card img {
+    width: 100%;
+    background-size: cover;
+    border-radius: 10px;
+}
+
+main .gym-cards .gym-card .gym-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 12px;
+}

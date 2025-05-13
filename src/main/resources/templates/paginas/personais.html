@@ -23,76 +23,82 @@
   <h1>Personais</h1>
   <p>Busque por profissionais Qualificados</p>
 
-  <input type="search" placeholder="Digite aqui CEP, Cidade ou Bairro" id="search" name="search"/>
+  <form method="get" action="/personais">
+    <input type="search" placeholder="Digite aqui CEP, Cidade ou Bairro" id="search" name="search"/>
+    <button type="submit" class="btn">Buscar</button>
+  </form>
 </div>
 
 <main>
   <aside>
-    <div class="titles">
-      <h2>Aplicar Fltros</h2>
-      <p>Treinos de Musculação e Condicionamento</p>
-    </div>
+    <form method="get" action="/personais">
+      <div class="filters">
 
-    <div class="filters">
-      <h4>Aplicar Filtros</h4>
+        <h4>Aplicar Filtros</h4>
 
-      <div class="filter">
-        <h6>Treinos de Muscalação e Condicionamento</h6>
-        <div class="checkbox">
-          <input type="checkbox" id="musculacao" />
-          <label for="musculacao">Musculação</label>
+        <div class="filter">
+          <h6>Treinos de Muscalação e Condicionamento</h6>
+          <div class="checkbox">
+            <input type="checkbox" id="musculacao" name="musculacao" value="true"/>
+            <label for="musculacao">Musculação</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="funcional" name="funcional" value="true" />
+            <label for="funcional">Treino Funcional</label>
+          </div>
         </div>
-        <div class="checkbox">
-          <input type="checkbox" id="funcional" />
-          <label for="funcional">Treino Funcional</label>
+        <div class="filter">
+          <h6>Cardio e Resistência</h6>
+          <div class="checkbox">
+            <input type="checkbox" id="resistencia" name="resistencia" value="true" />
+            <label for="resistencia">Spinning</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="hit" name="hit" value="true" />
+            <label for="hit">HIIT</label>
+          </div>
         </div>
-      </div>
-      <div class="filter">
-        <h6>Cardio e Resistência</h6>
-        <div class="checkbox">
-          <input type="checkbox" id="resistencia" />
-          <label for="resistencia">Spinning</label>
+        <div class="filter">
+          <h6>Bem-estar</h6>
+          <div class="checkbox">
+            <input type="checkbox" id="bem-estar" name="bem-estar" value="true"/>
+            <label for="bem-estar">Yoga</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="pilates" name="pilates" value="true" />
+            <label for="pilates">Pilates</label>
+          </div>
         </div>
-        <div class="checkbox">
-          <input type="checkbox" id="hit" />
-          <label for="hit">HIIT</label>
+        <div class="filter">
+          <h6>Treinos para Hipertrofia e Perfomance</h6>
+          <div class="checkbox">
+            <input type="checkbox" id="hipertrofia" name="hipertrofia" value="true" />
+            <label for="hipertrofia">Hipertrofia Muscular</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="potencia" name="potencia" value="true" />
+            <label for="potencia">Treinamento de Potência</label>
+          </div>
         </div>
-      </div>
-      <div class="filter">
-        <h6>Bem-estar</h6>
-        <div class="checkbox">
-          <input type="checkbox" id="bem-estar" />
-          <label for="bem-estar">Yoga</label>
+        <div class="filter">
+          <h6>Treinos Específicos</h6>
+          <div class="checkbox">
+            <input type="checkbox" id="gestante" name="gestante" value="true" />
+            <label for="gestante">Treino para Gestantes</label>
+          </div>
+          <div class="checkbox">
+            <input type="checkbox" id="idoso" name="idoso" value="true" />
+            <label for="idoso">Treino para Idosos</label>
+          </div>
         </div>
-        <div class="checkbox">
-          <input type="checkbox" id="pilates" />
-          <label for="pilates">Pilates</label>
-        </div>
-      </div>
-      <div class="filter">
-        <h6>Treinos para Hipertrofia e Perfomance</h6>
-        <div class="checkbox">
-          <input type="checkbox" id="hipertrofia" />
-          <label for="hipertrofia">Hipertrofia Muscular</label>
-        </div>
-        <div class="checkbox">
-          <input type="checkbox" id="potencia" />
-          <label for="potencia">Treinamento de Potência</label>
-        </div>
-      </div>
-      <div class="filter">
-        <h6>Treinos Específicos</h6>
-        <div class="checkbox">
-          <input type="checkbox" id="gestante" />
-          <label for="gestante">Treino para Gestantes</label>
-        </div>
-        <div class="checkbox">
-          <input type="checkbox" id="idoso" />
-          <label for="idoso">Treino para Idosos</label>
-        </div>
+
       </div>
 
-    </div>
+      <div class="buttons">
+        <button class="btn" type="submit">Aplicar Filtros</button>
+        <button class="btn" type="reset">Limpar Filtros</button>
+      </div>
+    </form>
   </aside>
 
   <section>
@@ -130,7 +136,9 @@
               <span th:text="${personal.email}"></span>
             </p>
 
+          <a th:href="@{/personais/{id}(id=${personal.id})}">
             <button class="btn">Entre em Contato</button>
+          </a>
         </div>
 
     </div>

@@ -116,6 +116,13 @@ nav ul a {
 }
 
 @media (max-width: 677px) {
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+  }
+
   .nav nav {
     display: none;
   }

@@ -2,8 +2,6 @@ package com.example.NovoTesteCrud.service;
 
 import com.example.NovoTesteCrud.domain.exercicios.Exercicio;
 import com.example.NovoTesteCrud.domain.treino.*;
-import com.example.NovoTesteCrud.domain.treino.dto.TreinoFilterDto;
-import org.springframework.data.jpa.domain.Specification;
 import com.example.NovoTesteCrud.domain.treino.dto.TreinoRequestDTO;
 import com.example.NovoTesteCrud.domain.user.UserAcad;
 import com.example.NovoTesteCrud.repository.UserAcadRepository;
@@ -28,13 +26,6 @@ public class TreinoService {
     public List<TreinoResponseDTO> buscarTodosTreinos() {
         return treinoRepository.findAll().stream().map(TreinoResponseDTO::new).toList();
     }
-    public List<TreinoResponseDTO> buscarTreinosFiltrados(TreinoFilterDto filtro) {
-        Specification<Treino> spec = filtro.toSpecification();
-        return treinoRepository.findAll(spec).stream()
-                .map(TreinoResponseDTO::new)
-                .toList();
-    }
-
 
     @Transactional
     public TreinoResponseDTO registrarTreinos(TreinoRequestDTO data) {

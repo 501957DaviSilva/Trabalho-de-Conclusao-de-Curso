@@ -1,24 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="/src/main/resources/statics/css/academias.css"
-    />
-    <link rel="stylesheet" href="/src/main/resources/statics/css/menu.css" />
-    <link rel="stylesheet" href="/src/main/resources/statics/css/rodape.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Title+Hero&display=swap"
-      rel="stylesheet"
-    />
-    <title>GuidesFit</title>
-  </head>
-  <body>
-    <div id="nav-placeholder"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <div id="footer-placeholder"></div>
-    <script src="/src/main/resources/statics/js/principal.js"></script>
-  </body>
+  <link rel="stylesheet" href="/css/index.css" />
+  <link rel="stylesheet" href="/css/menu.css" />
+  <link rel="stylesheet" href="/css/rodape.css" />
+  <link rel="stylesheet" href="/css/perfil.css" />
+
+  <title>GuidesFit</title>
+</head>
+<body>
+<div th:replace="componentes/menu"></div>
+<main>
+  <h2>Bem Vindo, Personal <strong th:text="${user.nome}"></strong></h2>
+
+  <section class="user-info">
+    <div class="info">
+      <p>
+        <strong>Nome: </strong>
+        <span th:text="${user.nome}"></span>
+      </p>
+    </div>
+    <div class="info">
+      <p>
+        <strong>Email: </strong>
+        <span th:text="${user.email}"></span>
+      </p>
+    </div>
+    <div class="info">
+      <p>
+        <strong>Telefone: </strong>
+        <span th:text="${user.telefone}"></span>
+      </p>
+    </div>
+    <div class="info">
+      <p>
+        <strong>Tipo de Acesso: </strong>
+        <span th:text="${user.role}"></span>
+      </p>
+    </div>
+    <div>
+      <a href="#">Alterar Senha</a>
+    </div>
+  </section>
+</main>
+
+<script>
+</script>
+</body>
 </html>

@@ -1,5 +1,6 @@
 CREATE TABLE academias (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255) NOT NULL,
-    endereco VARCHAR(255) NOT NULL
+    endereco VARCHAR(255) NOT NULL,
+    cnpj VARCHAR(30) NOT NULL
 );

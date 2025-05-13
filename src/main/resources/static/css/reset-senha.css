@@ -1,0 +1,77 @@
+main {
+    width: 100%;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    background: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main > section {
+    background: black;
+    padding: 5em 25em;
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+main > section > h3 {
+    font-size: 3em;
+    margin-bottom: 1em;
+}
+
+main > section > div {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+main > section > div > input {
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    outline: none;
+}
+
+main > section > div > input:focus {
+    border: 1px solid gray;
+}
+
+main > section > div .btn-send-code {
+    margin: auto;
+    background: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 4px;
+    width: max-content;
+}
+
+main > section > div .btn-send-code:hover {
+    color: #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    scale: 1.010;
+}
+
+.btn-reset-password {
+    margin: auto;
+    background: gray;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    border-radius: 7px;
+    width: max-content;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-reset-password:hover {
+    border: 1px solid white;
+    scale: 1.010;
+}

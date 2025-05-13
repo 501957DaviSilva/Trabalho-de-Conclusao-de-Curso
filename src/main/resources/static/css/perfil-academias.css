@@ -54,3 +54,14 @@ main .gym-cards .gym-card .gym-info {
     gap: 4px;
     padding-left: 12px;
 }
+
+.btn-link {
+    width: 100%;
+    padding: 0.5rem 2rem;
+    color: white;
+    background: black;
+    border: 2px solid transparent;
+    border-radius: 7px;
+    cursor: pointer;
+}
+

@@ -89,3 +89,16 @@ aside .filters .filter h6 {
 .checkbox input:checked + label::after {
     opacity: 1;
 }
+
+.buttons {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+@media (max-width: 685px) {
+    aside {
+        display: none;
+    }
+}

@@ -51,6 +51,10 @@ public class UsuarioService {
         return personalRepository.findAll();
     }
 
+    public Optional<Personal> buscarPersonalPorId(Long id) {
+        return personalRepository.findById(id);
+    }
+
     public Optional<Usuario> buscarUsuarioPorEmail(String email) {
         Optional<UserAcad> userAcad = userAcadRepository.findByUsuario_Email(email);
         if (userAcad.isPresent()) return Optional.of(userAcad.get().getUsuario());

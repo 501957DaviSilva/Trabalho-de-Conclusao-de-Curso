@@ -24,7 +24,7 @@ public class UserAcadAdmin {
     @Delegate
     private Usuario usuario;
 
-    @Column(name = "cnpj", unique = true, length = 14)
+    @Column(name = "cnpj", unique = true, length = 30)
     private String cnpj;
 
     @OneToOne

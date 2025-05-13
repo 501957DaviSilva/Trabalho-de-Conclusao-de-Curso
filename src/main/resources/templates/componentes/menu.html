@@ -69,13 +69,11 @@
     liLinkLogout.innerHTML = `
         <a href="/cadastro" id="cadastro-link">
             <button class="btn">Registrar-se</button>
-          </a>
+        </a>
     `
   } else {
     liLinkLogin.innerHTML = `
-        <a href="/perfil-academias" id="login-link">
-          <button class="btn">Meu Perfil</button>
-        </a>
+          <button class="btn" id="perfil-btn">Meu Perfil</button>
     `
     liLinkLogout.innerHTML = `
         <button class="btn" id="logout-btn">Logout</button>
@@ -83,10 +81,17 @@
   }
 
   document.getElementById('logout-btn').addEventListener('click', logout);
+  document.getElementById('perfil-btn').addEventListener('click', goToProfile);
 
   function logout() {
-    console.log('aaaa')
     localStorage.removeItem('token');
+    document.cookie = `token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
     window.location.href = '/login';
+  }
+
+  function goToProfile() {
+    document.cookie = `token=${token}; path=/;}`;
+
+    window.location.href = '/perfil';
   }
 </script>

@@ -1,18 +1,91 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/academias.css">
-    <link rel="stylesheet" href="../css/menu.css">
-    <link rel="stylesheet" href="../css/rodape.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Title+Hero&display=swap" rel="stylesheet">
-    <title>GuidesFit</title>
-  </head>
-  <body>
-    <div id="nav-placeholder"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <div id="footer-placeholder"></div>
-    <script src="../js/principal.js"></script>
+  <link rel="stylesheet" href="/css/index.css" />
+  <link rel="stylesheet" href="/css/menu.css" />
+  <link rel="stylesheet" href="/css/rodape.css" />
+  <link rel="stylesheet" href="/css/detalhes-academias.css" />
+
+  <title>GuidesFit</title>
+</head>
+  <body>
+    <div th:replace="componentes/menu"></div>
+    <main>
+      <p th:unless="${gym.present}" style="margin-top: 3em">
+        Nenhuma Academia Encontrada!
+      </p>
+
+      <section th:if="${gym.present}" class="main">
+        <section class="main-left">
+          <div class="title-info">
+            <h2 th:text="${gym.get().nome}">Detalhes</h2>
+            <div>
+              <p th:text="${gym.get().endereco}"></p>
+              <a th:href="@{'https://www.google.com.br/maps/search/' + ${gym.get().endereco}}"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                Ver rota
+              </a>
+            </div>
+          </div>
+
+          <img
+            src="https://st2.depositphotos.com/2586633/46477/v/450/depositphotos_464771766-stock-illustration-no-photo-or-blank-image.jpg"
+          />
+          <div class="range">
+            <h4>Avaliação</h4>
+            <p><strong>5.0</strong></p>
+            <div class="stars">
+              <img
+                src="http://www.publicdomainpictures.net/pictures/50000/velka/star-silhouette.jpg"
+              />
+              <img
+                src="http://www.publicdomainpictures.net/pictures/50000/velka/star-silhouette.jpg"
+              />
+              <img
+                src="http://www.publicdomainpictures.net/pictures/50000/velka/star-silhouette.jpg"
+              />
+              <img
+                src="http://www.publicdomainpictures.net/pictures/50000/velka/star-silhouette.jpg"
+              />
+              <img
+                src="http://www.publicdomainpictures.net/pictures/50000/velka/star-silhouette.jpg"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section class="main-right">
+          <div class="container">
+            <h2>Horário de Funcionamento</h2>
+
+            <div>
+              <p>
+                Segunda á sexta
+                <span>06:00 ás 23:00</span>
+              </p><p>
+                Sábado
+                <span>07:00 ás 20:00</span>
+              </p><p>
+                Domingo/Feriado
+                <span>07:00 ás 14:00</span>
+              </p>
+            </div>
+
+            <h5>Ver Horários de Pico</h5>
+
+          </div>
+        </section>
+
+
+      </section>
+
+    </main>
+
+    <script>
+    </script>
   </body>
 </html>

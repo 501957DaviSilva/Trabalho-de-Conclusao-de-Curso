@@ -2,8 +2,20 @@
     padding: 3em 3em 0 3em;
 }
 
-.search-personal input {
+@media (max-width: 677px) {
+    .search-personal {
+        margin-top: 4em;
+    }
+}
+
+.search-personal form {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
     margin-top: 2em;
+}
+
+.search-personal input {
     width: 100%;
     padding: 1em;
     border: 1px solid lightgray;
@@ -21,14 +33,21 @@ main > section {
 .personais {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 4em;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    column-gap: 15px;
+    row-gap: 25px;
 }
 
 .personal {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: 12px;
+}
+
+.personal:hover {
+    transform: scale(1.05);
+    transition: 0.3s;
 }
 
 .personal p {
