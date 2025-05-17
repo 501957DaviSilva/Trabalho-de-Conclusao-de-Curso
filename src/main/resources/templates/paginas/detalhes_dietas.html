@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="/css/index.css" />
+  <link rel="stylesheet" href="/css/menu.css" />
+  <link rel="stylesheet" href="/css/rodape.css" />
+  <link rel="stylesheet" href="/css/detalhes-dietas.css" />
+
+  <title>Detalhes da Dieta - GuidesFit</title>
+</head>
+<body>
+<div th:replace="~{componentes/menu}"></div>
+
+<main>
+  <p th:if="${dieta == null}" style="margin-top: 3em">
+    Dieta não encontrada!
+  </p>
+
+  <section th:if="${dieta != null}" class="main">
+
+    <section class="main-left">
+      <div class="title-info">
+        <h2 th:text="${dieta.titulo}">Título da Dieta</h2>
+        <div>
+          <p><strong>Postado por:</strong>
+            <span th:if="${dieta.userAcad != null}" th:text="${dieta.userAcad.usuario.nome}">UserAcad</span>
+            <span th:if="${dieta.personal != null}" th:text="${dieta.personal.usuario.nome}">Personal</span>
+          </p>
+        </div>
+      </div>
+      <div style="margin-top: 2em;" th:if="${temPermissao}">
+        <a th:href="@{'/dietas/' + ${dieta.id} + '/editar'}">
+          <button class="btn">Editar</button>
+        </a>
+        <form th:action="@{'/dietas/' + ${dieta.id} + '/deletar'}" method="post" style="display: inline;">
+          <button class="btn" onclick="return confirm('Tem certeza que deseja deletar esta dieta?')">Excluir</button>
+        </form>
+      </div>
+      <img
+              th:src="${dieta.imagemUrl != null} ? ${dieta.imagemUrl} : 'https://st2.depositphotos.com/2586633/46477/v/450/depositphotos_464771766-stock-illustration-no-photo-or-blank-image.jpg'"
+              alt="Imagem da Dieta"
+      />
+
+      <div class="range">
+        <h4>Objetivo</h4>
+        <p th:text="${dieta.objetivo}">Objetivo</p>
+      </div>
+
+      <div class="range">
+        <h4>Tipo de Dieta</h4>
+        <p th:text="${dieta.tipoDieta}">Tipo de Dieta</p>
+      </div>
+
+    </section>
+
+    <section class="main-right">
+      <div class="container">
+        <h2>Descrição</h2>
+
+        <div>
+          <p th:text="${dieta.descricao}">Descrição da dieta detalhada.</p>
+        </div>
+
+        <h2>Calorias</h2>
+        <div>
+          <p th:text="${dieta.calorias} + ' kcal'">Calorias</p>
+        </div>
+
+        <h2>Informações Adicionais</h2>
+        <div>
+          <p><strong>Postado em:</strong> <span th:text="${#dates.format(dieta.dataCriacao, 'dd/MM/yyyy')}">01/01/2025</span></p>
+        </div>
+      </div>
+    </section>
+
+  </section>
+</main>
+
+<div th:replace="~{componentes/rodape}"></div>
+</body>
+</html>

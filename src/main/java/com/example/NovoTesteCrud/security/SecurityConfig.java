@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
+
     @Autowired
     private JwtFilter jwtFilter;
 
@@ -83,8 +84,14 @@ public class SecurityConfig {
                         .requestMatchers("/academias-externas/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/avaliacoes/academia/{academiaId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/avaliacoes/personal/{personalId}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/dietas").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/dietas/filtro").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pagina-dietas").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pagina-dietas").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/cadastrar_dietas/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/dietas/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/dietas/*/editar").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/dietas/*/editar").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/dietas/*/deletar").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/dietas").permitAll()
                         .requestMatchers(HttpMethod.GET, "/exercicios").permitAll()
                         .requestMatchers(HttpMethod.GET, "/planos/academia/{academiaId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/treino").permitAll()

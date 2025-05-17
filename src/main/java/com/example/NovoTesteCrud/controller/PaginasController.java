@@ -3,10 +3,22 @@ package com.example.NovoTesteCrud.controller;
 import com.example.NovoTesteCrud.domain.user.UserAcad;
 import com.example.NovoTesteCrud.domain.userbase.Role;
 import com.example.NovoTesteCrud.domain.userbase.Usuario;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import com.example.NovoTesteCrud.domain.dieta.dto.DietaFilterDto;
+import com.example.NovoTesteCrud.domain.dieta.enums.TipoDieta;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.HttpStatus;
+import com.example.NovoTesteCrud.domain.dieta.dto.DietaRequestDTO;
+import com.example.NovoTesteCrud.domain.dieta.dto.DietaResponseDTO;
 import com.example.NovoTesteCrud.security.JwtUtil;
 import com.example.NovoTesteCrud.service.AcademiaService;
 import com.example.NovoTesteCrud.service.TreinoService;
+import com.example.NovoTesteCrud.service.DietaService;
 import com.example.NovoTesteCrud.service.UsuarioService;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -22,6 +34,7 @@ public class PaginasController {
     @Autowired private AcademiaService academiaService;
     @Autowired private TreinoService treinoService;
     @Autowired private UsuarioService usuarioService;
+    @Autowired private DietaService dietaService;
     @Autowired private JwtUtil jwtUtil;
 
     @GetMapping("/")
@@ -80,6 +93,182 @@ public class PaginasController {
         } catch (Exception e) {
             return new ModelAndView("redirect:/login");
         }
+    }
+    @GetMapping("/pagina-dietas")
+    public ModelAndView paginaDietas(@RequestParam(required = false) TipoDieta tipoDieta) {
+        var filtro = new DietaFilterDto(tipoDieta);
+        var dietas = dietaService.buscarTodasDietasFiltradas(filtro)
+                .stream().map(DietaResponseDTO::new).toList();
+
+        ModelAndView model = new ModelAndView("paginas/dietas");
+        model.addObject("dietas", dietas);
+        return model;
+    }
+
+    @GetMapping("/dietas/{id}")
+    public ModelAndView detalhesDieta(
+            @PathVariable Long id,
+            @CookieValue(value = "token", required = false) String token) {
+
+        var dieta = this.dietaService.buscarDietaPorId(id);
+        if (dieta == null) {
+            return new ModelAndView("redirect:/pagina-dietas");
+        }
+
+        ModelAndView model = new ModelAndView("paginas/detalhes_dietas");
+        model.addObject("dieta", dieta);
+
+        try {
+            String email = jwtUtil.extractEmail(token);
+            boolean temPermissao = (dieta.getUserAcad() != null && dieta.getUserAcad().getUsuario().getEmail().equals(email)) ||
+                    (dieta.getPersonal() != null && dieta.getPersonal().getUsuario().getEmail().equals(email));
+            model.addObject("temPermissao", temPermissao);
+        } catch (Exception e) {
+            model.addObject("temPermissao", false);
+        }
+
+        return model;
+    }
+
+
+
+    @GetMapping("/cadastrar_dietas")
+    public ModelAndView formCadastrarDieta(@CookieValue(value = "token", required = false) String token) {
+        var model = new ModelAndView("paginas/cadastrar_dietas");
+        model.addObject("dietaRequest", new DietaRequestDTO(null, "", "", 0, null, null, null, null));
+
+        try {
+            String email = jwtUtil.extractEmail(token);
+            var role = jwtUtil.extractRole(token);
+
+            if (role.name().contains("USERACAD")) {
+                var userAcad = usuarioService.buscarTodosUserAcad()
+                        .stream()
+                        .filter(u -> u.getUsuario().getEmail().equals(email))
+                        .findFirst()
+                        .orElse(null);
+                if (userAcad != null) model.addObject("userAcadId", userAcad.getId());
+            }
+
+            if (role.name().contains("PERSONAL")) {
+                var personal = usuarioService.buscarTodosPersonal()
+                        .stream()
+                        .filter(p -> p.getUsuario().getEmail().equals(email))
+                        .findFirst()
+                        .orElse(null);
+                if (personal != null) model.addObject("personalId", personal.getId());
+            }
+
+        } catch (Exception ignored) {
+        }
+        return model;
+    }
+    @PostMapping(value = "/dietas", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> salvarDietaJson(
+            @RequestBody DietaRequestDTO dto,
+            @CookieValue(value = "token", required = false) String token) {
+        try {
+
+            String email = jwtUtil.extractEmail(token);
+            var role = jwtUtil.extractRole(token);
+
+            if (role.name().contains("USERACAD")) {
+                var userAcad = usuarioService.buscarTodosUserAcad()
+                        .stream().filter(u -> u.getUsuario().getEmail().equals(email)).findFirst().orElse(null);
+                if (userAcad != null) {
+                    dto = new DietaRequestDTO(dto.id(), dto.titulo(), dto.descricao(), dto.calorias(), dto.objetivo(),
+                            dto.tipoDieta(), userAcad.getId(), null);
+                }
+            }
+
+            if (role.name().contains("PERSONAL")) {
+                var personal = usuarioService.buscarTodosPersonal()
+                        .stream().filter(p -> p.getUsuario().getEmail().equals(email)).findFirst().orElse(null);
+                if (personal != null) {
+                    dto = new DietaRequestDTO(dto.id(), dto.titulo(), dto.descricao(), dto.calorias(), dto.objetivo(),
+                            dto.tipoDieta(), null, personal.getId());
+                }
+            }
+
+            var nova = dietaService.criarDieta(dto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .header("Location", "/dietas/" + nova.getId())
+                    .build();
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+
+    @GetMapping("/dietas/{id}/editar")
+    public ModelAndView editarDieta(@PathVariable Long id, @CookieValue(value = "token", required = false) String token) {
+
+        var dieta = dietaService.listarTodasDieta().stream()
+                .filter(d -> d.getId().equals(id)).findFirst().orElse(null);
+        if (dieta == null) return new ModelAndView("redirect:/pagina-dietas");
+
+        var model = new ModelAndView("paginas/cadastrar_dietas");
+        model.addObject("dietaRequest", new DietaRequestDTO(
+                dieta.getId(),
+                dieta.getTitulo(),
+                dieta.getDescricao(),
+                dieta.getCalorias(),
+                dieta.getObjetivo(),
+                dieta.getTipoDieta(),
+                dieta.getUserAcad() != null ? dieta.getUserAcad().getId() : null,
+                dieta.getPersonal() != null ? dieta.getPersonal().getId() : null
+        ));
+        model.addObject("isUpdate", true);
+        return model;
+    }
+
+    @PostMapping("/dietas/{id}/editar")
+    public String atualizarDieta(
+            @PathVariable Long id,
+            @ModelAttribute DietaRequestDTO dto,
+            @CookieValue(value = "token", defaultValue = "") String token
+    ) {
+        if (token.isBlank()) return "redirect:/login";
+
+        String email = jwtUtil.extractEmail(token);
+        var role = jwtUtil.extractRole(token);
+
+        if (role.name().contains("USERACAD")) {
+            var userAcad = usuarioService.buscarTodosUserAcad()
+                    .stream()
+                    .filter(u -> u.getUsuario().getEmail().equals(email))
+                    .findFirst()
+                    .orElse(null);
+            if (userAcad != null) {
+                dto = new DietaRequestDTO(dto.id(), dto.titulo(), dto.descricao(), dto.calorias(), dto.objetivo(), dto.tipoDieta(), userAcad.getId(), null);
+            } else {
+                return "redirect:/login";
+            }
+        } else if (role.name().contains("PERSONAL")) {
+            var personal = usuarioService.buscarTodosPersonal()
+                    .stream()
+                    .filter(p -> p.getUsuario().getEmail().equals(email))
+                    .findFirst()
+                    .orElse(null);
+            if (personal != null) {
+                dto = new DietaRequestDTO(dto.id(), dto.titulo(), dto.descricao(), dto.calorias(), dto.objetivo(), dto.tipoDieta(), null, personal.getId());
+            } else {
+                return "redirect:/login";
+            }
+        } else {
+            return "redirect:/login";
+        }
+
+        dietaService.atualizarDieta(id, dto);
+        return "redirect:/dietas/" + id + "/detalhes";
+    }
+
+    @PostMapping("/dietas/{id}/deletar")
+    public String deletarDieta(@PathVariable Long id) {
+        dietaService.deletarDieta(id);
+        return "redirect:/pagina-dietas";
     }
 
     @GetMapping("/academias")

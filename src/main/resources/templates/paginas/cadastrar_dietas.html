@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Title+Hero&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/index.css" />
+  <link rel="stylesheet" href="/css/menu.css" />
+  <link rel="stylesheet" href="/css/form.css" />
+
+  <title>Cadastro de Dieta - GuidesFit</title>
+</head>
+<body>
+<div th:replace="~{componentes/menu}"></div>
+
+<div class="form-container">
+  <h1 th:text="${isUpdate} ? 'Editar Dieta' : 'Cadastre uma Nova Dieta'"></h1>
+
+  <form id="dietaForm">
+    <div class="form-group">
+      <label for="titulo">Título</label>
+      <input type="text" id="titulo" placeholder="Nome da dieta" required />
+    </div>
+
+    <div class="form-group">
+      <label for="descricao">Descrição</label>
+      <textarea id="descricao" placeholder="Detalhe os alimentos, rotina, etc." required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="calorias">Calorias</label>
+      <input type="number" id="calorias" min="0" required />
+    </div>
+
+    <div class="form-group">
+      <label for="objetivo">Objetivo</label>
+      <select id="objetivo" required>
+        <option value="">Selecione</option>
+        <option value="BULKING">Bulking (Ganho de peso)</option>
+        <option value="CUTTING">Cutting (Perda de peso)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="tipoDieta">Tipo de Dieta</label>
+      <select id="tipoDieta" required>
+        <option value="">Selecione</option>
+        <option value="BULKING">Bulking</option>
+        <option value="CUTTING">Cutting</option>
+      </select>
+    </div>
+
+    <input type="hidden" id="userAcadId" th:value="${userAcadId}" />
+    <input type="hidden" id="personalId" th:value="${personalId}" />
+
+    <div class="form-group">
+      <button class="btn" type="submit">Salvar Dieta</button>
+    </div>
+  </form>
+</div>
+
+<div th:replace="~{componentes/rodape}"></div>
+
+<script>
+  document.getElementById("dietaForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const token = document.cookie.split('; ').find(row => row.startsWith('token='))?.split('=')[1];
+    if (!token) return window.location.href = '/login';
+
+    const payload = {
+      titulo: document.getElementById("titulo").value,
+      descricao: document.getElementById("descricao").value,
+      calorias: document.getElementById("calorias").value,
+      objetivo: document.getElementById("objetivo").value,
+      tipoDieta: document.getElementById("tipoDieta").value,
+      userAcadId: document.getElementById("userAcadId").value || null,
+      personalId: document.getElementById("personalId").value || null
+    };
+
+    const response = await fetch("/dietas", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      const location = response.headers.get("Location");
+      window.location.href = location ? location : "/pagina-dietas";
+    } else {
+      alert("Erro ao salvar dieta. Verifique os dados e tente novamente.");
+    }
+  });
+</script>
+</body>
+</html>

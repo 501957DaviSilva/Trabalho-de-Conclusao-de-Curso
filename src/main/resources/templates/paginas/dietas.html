@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Title+Hero&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/menu.css" />
+    <link rel="stylesheet" href="/css/aside-filters.css" />
+    <link rel="stylesheet" href="/css/dieta.css" />
+    <title>Dietas - GuidesFit</title>
+</head>
+<body>
+<div th:replace="~{componentes/menu}"></div>
+
+<div class="search-personal">
+    <h1>Dietas</h1>
+    <p>Acesse as dietas criadas pela comunidade!</p>
+</div>
+
+<main>
+    <aside>
+        <form method="get" action="/pagina-dietas">
+        <div class="filters">
+                <h4>Aplicar Filtros</h4>
+
+                <div class="filter">
+                    <h6>Tipo de Dieta</h6>
+                    <div class="checkbox">
+                        <input type="checkbox" id="bulking" name="tipoDieta" value="BULKING" />
+                        <label for="bulking">Bulking</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="cutting" name="tipoDieta" value="CUTTING" />
+                        <label for="cutting">Cutting</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn" type="submit">Aplicar Filtros</button>
+                <button class="btn" type="button" id="reset">Limpar Filtros</button>
+            </div>
+        </form>
+    </aside>
+
+    <section>
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1em;">
+            <h2>Cadastre dietas para a Comunidade</h2>
+            <a href="/cadastrar_dietas" class="btn">Cadastrar Dieta</a>
+
+        </div>
+
+        <p th:if="${#lists.isEmpty(dietas)}" style="margin-top: 3em">Nenhuma Dieta Encontrada!</p>
+
+        <div class="gym-cards">
+            <div class="gym-card" th:each="dieta : ${dietas}">
+                <div class="gym-info">
+                    <h4 th:text="${dieta.titulo}">Título</h4>
+                    <p><strong>Tipo:</strong> <span th:text="${dieta.tipoDieta}">Tipo</span></p>
+                    <p><strong>Postado por:</strong> <span th:text="${dieta.nomeUsuario}">Usuário</span></p>
+                    <p><strong>Descrição:</strong> <span th:text="${dieta.descricao}">Descrição</span></p>
+                    <a th:href="@{/dietas/{id}(id=${dieta.id})}" class="btn">Saber mais</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{componentes/rodape}"></div>
+
+<script>
+    document.querySelector('#reset').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location = '/pagina-dietas ';
+    });
+</script>
+</body>
+</html>

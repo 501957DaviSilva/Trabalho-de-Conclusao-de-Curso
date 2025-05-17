@@ -1,0 +1,71 @@
+.search-personal {
+  padding: 3em 3em 0 3em;
+}
+
+@media (max-width: 677px) {
+  .search-personal {
+    margin-top: 4em;
+  }
+}
+
+.search-personal form {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 2em;
+}
+
+.search-personal input {
+  width: 100%;
+  padding: 1em;
+  border: 1px solid lightgray;
+  border-radius: 0.8em;
+}
+
+.search-personal input:focus {
+  border: 1px solid gray;
+}
+
+main > section {
+  width: 100%;
+}
+
+main .gym-cards {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  column-gap: 15px;
+  row-gap: 25px;
+}
+
+main .gym-cards .gym-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gym-card:hover {
+  transform: scale(1.05);
+  transition: 0.3s;
+}
+
+main .gym-cards .gym-card img {
+  width: 100%;
+  background-size: cover;
+  border-radius: 10px;
+}
+
+main .gym-cards .gym-card .gym-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 12px;
+}
+
+@media (max-width: 456px) {
+  main .gym-cards {
+    grid-template-columns: repeat(auto-fill, minmax(224px, 1fr));
+  }
+  
+}
